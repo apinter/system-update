@@ -1,0 +1,49 @@
+---
+- name: Update Linux boxes
+  hosts: all
+  become: true
+  handlers:
+    - name: Reboot all updated machines and wait for it to boot
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+        test_command: "whoami"
+      listen: "restart gateway services"
+
+  tasks:
+    - name: Update SuSE/openSUSE hosts
+      community.general.zypper:
+        name: '*'
+        state: latest
+        update_cache: yes
+      when:
+        - ansible_os_family == "Suse"
+      notify: 
+        - "restart gateway services"
+
+    - name: Update RHEL/Fedora/CentOS hosts
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+        update_cache: yes
+      when:
+        - ansible_os_family == "RedHat"
+      notify: 
+        - "restart gateway services"
+
+    - name: Update openSUSE MicroOS/Kubic
+      ansible.builtin.command:
+        cmd: /usr/sbin/transactional-update cleanup dup
+      when:
+        - ansible_os_family == "openSUSE MicroOS"
+      notify: 
+        - "restart gateway services"
+        
+    - name: Update Debian/Ubuntu hosts
+      ansible.builtin.apt:
+        name: '*'
+        state: latest
+        update_cache: yes
+      when:
+        - ansible_os_family == "Debian"
+      notify: 
+        - "restart gateway services"

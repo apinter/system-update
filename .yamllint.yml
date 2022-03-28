@@ -1,0 +1,4 @@
+rules:
+  truthy:
+    allowed-values: ['true', 'false', 'True', 'False', 'yes', 'no']
+    check-keys: true
