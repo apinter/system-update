@@ -30,11 +30,13 @@
       notify: 
         - "restart gateway services"
 
-    - name: Update openSUSE MicroOS/Kubic
-      ansible.builtin.command:
-        cmd: /usr/sbin/transactional-update cleanup dup
+    - name: Update openSUSE MicroOS/Kubic hosts
+      community.general.zypper:
+        name: '*'
+        state: dist-upgrade
+        update_cache: yes
       when:
-        - ansible_os_family == "openSUSE MicroOS"
+        - ansible_distribution == "openSUSE MicroOS"
       notify: 
         - "restart gateway services"
 
