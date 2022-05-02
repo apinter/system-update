@@ -1,6 +1,6 @@
 ---
 - name: Update Linux boxes
-  hosts: all
+  hosts: TW
   become: true
   handlers:
     - name: Reboot all updated machines and wait for it to boot
@@ -17,39 +17,69 @@
         update_cache: yes
       when:
         - ansible_distribution == "openSUSE Tumbleweed"
-      notify: 
-        - "restart gateway services"
+      retries: 4
+      register: tw_update_status
+
+    - name: Reboot all updated machines and wait for it to boot
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+        test_command: "whoami"
+      listen: "restart gateway services"
+      when: tw_update_status.changed
 
     - name: Update SLE/openSUSE Leap hosts
       community.general.zypper:
         name: '*'
         state: latest
         update_cache: yes
+      retries: 4
       when:
         - ansible_distribution == "openSUSE Leap"
-      notify: 
-        - "restart gateway services"
+      register: leap_update_status
 
+    - name: Reboot all updated machines and wait for it to boot
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+        test_command: "whoami"
+      listen: "restart gateway services"
+      when: leap_update_status.changed
+    
     - name: Update openSUSE MicroOS/Kubic hosts
       community.general.zypper:
         name: '*'
         state: dist-upgrade
         update_cache: yes
+      retries: 4
       when:
         - ansible_distribution == "openSUSE MicroOS"
       notify: 
         - "restart gateway services"
+      register: micro_update_status
+
+    - name: Reboot all updated machines and wait for it to boot
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+        test_command: "whoami"
+      listen: "restart gateway services"
+      when: micro_update_status.changed
 
     - name: Update RHEL/Fedora/CentOS hosts
       ansible.builtin.dnf:
         name: '*'
         state: latest
         update_cache: yes
+      retries: 4
       when:
         - ansible_os_family == "RedHat"
-      notify: 
-        - "restart gateway services"
-        
+      regsiter: rhel_update_status
+
+    - name: Reboot all updated machines and wait for it to boot
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+        test_command: "whoami"
+      listen: "restart gateway services"
+      when: rhel_update_status.changed
+
     - name: Update Debian/Ubuntu hosts
       ansible.builtin.apt:
         name: '*'
@@ -57,5 +87,11 @@
         update_cache: yes
       when:
         - ansible_os_family == "Debian"
-      notify: 
-        - "restart gateway services"
+      register: deb_update_status
+
+    - name: Reboot all updated machines and wait for it to boot
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+        test_command: "whoami"
+      listen: "restart gateway services"
+      when: deb_update_status.changed
