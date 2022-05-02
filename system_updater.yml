@@ -1,13 +1,7 @@
 ---
 - name: Update Linux boxes
-  hosts: TW
+  hosts: all
   become: true
-  handlers:
-    - name: Reboot all updated machines and wait for it to boot
-      ansible.builtin.reboot:
-        reboot_timeout: 600
-        test_command: "whoami"
-      listen: "restart gateway services"
 
   tasks:
     - name: Update openSUSE Tumbleweed hosts
