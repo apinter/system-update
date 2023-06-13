@@ -35,7 +35,7 @@
         reboot_timeout: 600
         test_command: "whoami"
       when: leap_update_status.changed
-    
+
     - name: Update openSUSE MicroOS/Kubic hosts
       community.general.zypper:
         name: '*'
@@ -60,7 +60,7 @@
       retries: 4
       when:
         - ansible_os_family == "RedHat"
-      regsiter: rhel_update_status
+      register: rhel_update_status
 
     - name: Reboot all updated machines and wait for it to boot
       ansible.builtin.reboot:
