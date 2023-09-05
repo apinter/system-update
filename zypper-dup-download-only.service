@@ -1,0 +1,14 @@
+[Unit]
+Description=Download avaialble updates 
+
+[Service]
+Type=oneshot
+Restart=on-failure
+RestartSec=5s
+ExecStartPre=/usr/bin/zypper ref
+ExecStart=/usr/bin/zypper dup --download-only -y 
+#ExecStartPost=/usr/bin/notify-send "openSUSE updates are ready to be installed"
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

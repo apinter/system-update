@@ -1,7 +1,8 @@
 ---
 - name: Update Linux boxes
-  hosts: all
+  hosts: TW, NIX 
   become: true
+  gather_facts: true
 
   tasks:
     - name: Update openSUSE Tumbleweed hosts
@@ -52,7 +53,7 @@
         test_command: "whoami"
       when: micro_update_status.changed
 
-    - name: Update RHEL/Fedora/CentOS hosts
+    - name: Update RHEL,Fedora,CentOS hosts
       ansible.builtin.dnf:
         name: '*'
         state: latest
@@ -82,3 +83,14 @@
         reboot_timeout: 600
         test_command: "whoami"
       when: deb_update_status.changed
+
+    - name: Update NixOS hosts
+      ansible.builtin.shell: nix-channel --update && nixos-rebuild switch --upgrade
+      when:
+        - ansible_distribution == "NixOS"
+      retries: 4
+      register: nix_update_status
+
+    - name: Reboot all updated machines and wait for it to boot
+      ansible.builtin.shell: systemctl reboot
+      when: nix_update_status.changed

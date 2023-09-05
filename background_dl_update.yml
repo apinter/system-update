@@ -1,0 +1,35 @@
+---
+- name: Download updates in the backgground
+  hosts: TW 
+  become: true
+  handlers:
+    - name: Enable services
+      ansible.builtin.systemd:
+        state: started
+        daemon_reload: yes
+        name: zypper-dup-download-only.timer
+      listen: "daemon reload"
+  tasks:
+    - name: Copy service unit
+      ansible.builtin.copy:
+        src: zypper-dup-download-only.service
+        dest: /etc/systemd/system/
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Copy timer unit
+      ansible.builtin.copy:
+        src: zypper-dup-download-only.timer
+        dest: /etc/systemd/system/
+        owner: root
+        group: root
+        mode: '0644'
+      notify: 
+        - "daemon reload"
+    - name: Enable services
+      ansible.builtin.systemd:
+        state: started
+        daemon_reload: yes
+        enabled: yes
+        name: zypper-dup-download-only.timer
