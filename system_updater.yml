@@ -1,6 +1,6 @@
 ---
 - name: Update Linux boxes
-  hosts: TW, NIX 
+  hosts: 
   become: true
   gather_facts: true
 
@@ -83,6 +83,25 @@
         reboot_timeout: 600
         test_command: "whoami"
       when: deb_update_status.changed
+
+    - name: Pull nix configuration from Github (NixOS)
+      ansible.builtin.git:
+        repo: https://github.com/apinter/dotconf.git
+        dest: /tmp/dotconf
+        version: master
+        single_branch: true
+      when:
+        - ansible_distribution == "NixOS"
+
+    - name: Copy nix configuration to /etc/nixos (NixOS)
+      ansible.builtin.copy:
+        src: /tmp/dotconf/nix/{{ inventory_hostname }}
+        dest: /etc/nixos
+        owner: root
+        group: root
+        mode: 0755
+      when:
+        - ansible_distribution == "NixOS"
 
     - name: Update NixOS hosts
       ansible.builtin.shell: nix-channel --update && nixos-rebuild switch --upgrade
