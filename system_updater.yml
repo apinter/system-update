@@ -1,6 +1,6 @@
 ---
 - name: Update Linux boxes
-  hosts: 
+  hosts: otong
   become: true
   gather_facts: true
 
@@ -100,6 +100,7 @@
         owner: root
         group: root
         mode: 0755
+        remote_src: yes
       when:
         - ansible_distribution == "NixOS"
 
