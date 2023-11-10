@@ -1,6 +1,6 @@
 ---
 - name: Update Linux boxes
-  hosts: NixOS 
+  hosts: all 
   become: true
   gather_facts: true
 
