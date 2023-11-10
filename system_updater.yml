@@ -1,6 +1,6 @@
 ---
 - name: Update Linux boxes
-  hosts: otong
+  hosts: NixOS 
   become: true
   gather_facts: true
 
@@ -112,5 +112,8 @@
       register: nix_update_status
 
     - name: Reboot all updated machines and wait for it to boot
-      ansible.builtin.shell: systemctl reboot
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+        reboot_command: "/run/current-system/sw/bin/reboot"
+        test_command: "whoami"
       when: nix_update_status.changed
