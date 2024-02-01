@@ -16,6 +16,7 @@ jobs:
     steps:
       - name: Update server
         run: |
+            export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
             mkdir -p ~/.ssh/
             echo -n ${{ secrets.SSH_SECRET }} > ~/.ssh/ansi
             ansible-playbook -i inventory system_updater.yml -e "target_host=Fedora"
