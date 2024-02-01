@@ -18,7 +18,12 @@ jobs:
       - name: Update server
         run: |
             ls -al
+            export ANSIBLE_CALLBACK_PLUGINS=$(python3 -m ara.setup.callback_plugins)
+            export ARA_API_CLIENT=http
+            export ARA_API_SERVER="https://ara.adathor.com"
+            export ARA_API_USERNAME=dataricecrispygoat
+            export ARA_API_PASSWORD=${{ secrets.ARA_API_PW }}
             mkdir -p ~/.ssh/
-            echo "${{ secrets.SSH_SECRET }}" > ~/.ssh/ansi
+            echo "${{ secrets.SSH_SECRET }}" > ~/.ssh/ansi && chmod 0600 ~/.ssh/ansi
             ansible-playbook -i inv.ini system_updater.yml -e "target_host=Fedora"
 
