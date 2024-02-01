@@ -12,10 +12,9 @@ jobs:
     container:
         image: docker.io/adathor/ansible-runner:latest
         env:
-          COMMIT_TOKEN_GITHUB: ${{ secrets.SSH_SECRET }}
+          SSH_SECRET: ${{ secrets.SSH_SECRET }}
     steps:
       - name: Update server
-        shell: sh
         run: |
             mkdir -p ~/.ssh/
             echo -n ${{ secrets.SSH_SECRET }} > ~/.ssh/ansi
