@@ -25,5 +25,5 @@ jobs:
             export ARA_API_PASSWORD=${{ secrets.ARA_API_PW }}
             mkdir -p ~/.ssh/
             echo "${{ secrets.SSH_SECRET }}" > ~/.ssh/ansi && chmod 0600 ~/.ssh/ansi
-            ansible-playbook -i inv.ini system_updater.yml -e "target_host=Fedora"
+            ansible-playbook -i inv.yml system_updater.yml -e "target_host=Fedora"
 
