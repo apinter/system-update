@@ -15,7 +15,7 @@ jobs:
           COMMIT_TOKEN_GITHUB: ${{ secrets.SSH_SECRET }}
     steps:
       - name: Update server
-        shell: bash
+        shell: sh
         run: |
             mkdir -p ~/.ssh/
             echo -n ${{ secrets.SSH_SECRET }} > ~/.ssh/ansi
