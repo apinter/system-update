@@ -14,11 +14,13 @@ jobs:
         env:
           SSH_SECRET: ${{ secrets.SSH_SECRET }}
     steps:
+      - uses: actions/checkout@v2
       - name: Update server
         run: |
             ls -al
             mount
             df -h
+            pwd
             mkdir -p ~/.ssh/
             echo -n ${{ secrets.SSH_SECRET }} > ~/.ssh/ansi
             ansible-playbook -i inv.ini system_updater.yml -e "target_host=Fedora"
