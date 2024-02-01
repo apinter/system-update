@@ -22,7 +22,7 @@ jobs:
             df -h
             pwd
             mkdir -p ~/.ssh/
-            echo -n ${{ secrets.SSH_SECRET }} > ~/.ssh/ansi
+            echo ${{ secrets.SSH_SECRET }} > ~/.ssh/ansi
             /usr/bin/ansible-playbook
             /usr/bin/ansible-playbook -i inv.ini system_updater.yml -e "target_host=Fedora"
 
