@@ -17,6 +17,8 @@ jobs:
       - name: Update server
         run: |
             ls -al
+            mount
+            df -h
             mkdir -p ~/.ssh/
             echo -n ${{ secrets.SSH_SECRET }} > ~/.ssh/ansi
             ansible-playbook -i inv.ini system_updater.yml -e "target_host=Fedora"
