@@ -23,5 +23,6 @@ jobs:
             pwd
             mkdir -p ~/.ssh/
             echo -n ${{ secrets.SSH_SECRET }} > ~/.ssh/ansi
-            ansible-playbook -i inv.ini system_updater.yml -e "target_host=Fedora"
+            ansible-playbook
+            ansible-playbook -i inv.ini ./system_updater.yml -e "target_host=Fedora"
 
