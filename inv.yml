@@ -1,6 +1,0 @@
----
-Fedora:
-  hosts:
-    ariwg:
-      ansible_host: 172.104.171.34
-
