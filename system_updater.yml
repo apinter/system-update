@@ -1,6 +1,6 @@
 ---
 - name: Update Linux boxes
-  hosts: "{{ target_host }}"
+  hosts: "{{ target_hosts }}"
   become: true
   gather_facts: true
 
